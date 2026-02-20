@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Syncfusion.Maui.Toolkit.Calendar;
+using Microsoft.Maui.Controls.Shapes; 
 
 namespace PlannerApp.Callender
 {
@@ -20,6 +21,7 @@ namespace PlannerApp.Callender
                 SelectedDate = DateTime.Today,
                 EnablePastDates = false,
                 ShowTrailingAndLeadingDates = false,
+                SelectionShape = CalendarSelectionShape.Rectangle, // Ändrat från Circle till Rectangle
                 MonthView = new CalendarMonthView
                 {
                     NumberOfVisibleWeeks = 1,
