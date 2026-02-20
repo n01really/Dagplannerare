@@ -18,7 +18,15 @@ namespace PlannerApp.Callender
                 View = CalendarView.Month,
                 SelectionMode = CalendarSelectionMode.Single,
                 SelectedDate = DateTime.Today,
-                EnablePastDates = true
+                EnablePastDates = false,
+                ShowTrailingAndLeadingDates = false,
+                MonthView = new CalendarMonthView
+                {
+                    NumberOfVisibleWeeks = 1,
+                    FirstDayOfWeek = DateTime.Today.DayOfWeek
+                },
+                
+                
             };
             Calendar.SelectedDate = DateTime.Today;
             Calendar.SelectionChanged += OnSelectionChanged;
