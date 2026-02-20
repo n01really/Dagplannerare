@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace PlannerApp
 {
@@ -9,6 +10,7 @@ namespace PlannerApp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .ConfigureSyncfusionToolkit() // Add this line
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
