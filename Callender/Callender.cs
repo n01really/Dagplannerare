@@ -11,6 +11,7 @@ namespace PlannerApp.Callender
     internal class Callender
     {
         public SfCalendar Calendar { get; set; }
+        public event EventHandler<DateTime>? DateSelected;
         
         public Callender()
         {
@@ -21,7 +22,7 @@ namespace PlannerApp.Callender
                 SelectedDate = DateTime.Today,
                 EnablePastDates = false,
                 ShowTrailingAndLeadingDates = false,
-                SelectionShape = CalendarSelectionShape.Rectangle, // Ändrat från Circle till Rectangle
+                SelectionShape = CalendarSelectionShape.Rectangle,
                 MonthView = new CalendarMonthView
                 {
                     NumberOfVisibleWeeks = 1,
@@ -39,7 +40,7 @@ namespace PlannerApp.Callender
             if (e.NewValue != null)
             {
                 DateTime selectedDate = (DateTime)e.NewValue;
-                // Handle the selected date change here
+                DateSelected?.Invoke(this, selectedDate);
             }
         }
         
