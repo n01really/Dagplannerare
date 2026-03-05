@@ -1,5 +1,4 @@
-﻿using PlannerApp.Callender;
-using PlannerApp.popups;
+﻿using PlannerApp.popups;
 using CommunityToolkit.Maui.Views;
 
 namespace PlannerApp

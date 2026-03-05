@@ -6,9 +6,24 @@
     xmlns:local="clr-namespace:PlannerApp"
     Title="PlannerApp">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="Kalender"
+            Icon="calendar.png"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+
+        <ShellContent
+            Title="Väder"
+            Icon="weather.png"
+            ContentTemplate="{DataTemplate local:WeatherPage}"
+            Route="WeatherPage" />
+
+        <ShellContent
+            Title="Analys"
+            Icon="analytics.png"
+            ContentTemplate="{DataTemplate local:AnalysisPage}"
+            Route="AnalysisPage" />
+    </TabBar>
 
 </Shell>
