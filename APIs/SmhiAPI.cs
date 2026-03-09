@@ -13,7 +13,7 @@ namespace PlannerApp.APIs
     public class SmhiAPI
     {
         private readonly HttpClient _httpClient;
-        private const string BaseUrl = "https://opendata-download-metfcst.smhi.se/api/category/snow1gv1/version/1/geotype/point";
+        private const string BaseUrl = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point";
 
         public SmhiAPI()
         {
@@ -26,12 +26,12 @@ namespace PlannerApp.APIs
             try
             {
                 // Position
-                var location = await Geolocation.Default.GetLocationAsync(new GeolocationRequest(GeolocationAccuracy.Medium));
+                var location = await Geolocation.Default.GetLocationAsync(new GeolocationRequest(GeolocationAccuracy.High));
                 if (location == null) return null;
 
                 // URL
-                string lat = location.Latitude.ToString("F2", CultureInfo.InvariantCulture);// F: fast decimalpunkt, 2: två decimaler, InvariantCulture: punkt som decimalavgränsare
-                string lon = location.Longitude.ToString("F2", CultureInfo.InvariantCulture);
+                string lat = location.Latitude.ToString("F6", CultureInfo.InvariantCulture); //F: fast decimalpunkt, 6: 6 decimaler, InvariantCulture: punkt som decimalavgränsare
+                string lon = location.Longitude.ToString("F6", CultureInfo.InvariantCulture);
                 string url = $"{BaseUrl}/lon/{lon}/lat/{lat}/data.json";
 
                 var response = await _httpClient.GetFromJsonAsync<SmhiResponse>(url);
