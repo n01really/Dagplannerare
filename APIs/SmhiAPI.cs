@@ -108,9 +108,6 @@ namespace PlannerApp.APIs
                 var endDate = DateTime.Now;
                 var startDate = endDate.AddDays(-daysBack);
                 
-            
-                 https://opendata-download-metobs.smhi.se/api/version/1.0/parameter/1/station/{stationId}/period/corrected-archive/data.json
-                
              
                 System.Diagnostics.Debug.WriteLine("Historisk data kräver Metobs API implementation");
                 return null;
