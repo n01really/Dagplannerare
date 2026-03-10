@@ -10,12 +10,67 @@
             FontSize="18"
             HorizontalOptions="Center" />
 
-        <Label 
-            x:Name="TempLabel"
-            Text="-- °C"
-            FontSize="32"
-            FontAttributes="Bold"
-            HorizontalOptions="Center" />
+        <!-- Temperatur Panel -->
+        <Frame 
+            BorderColor="LightBlue"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="🌡️ Temperatur"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="TempLabel"
+                    Text="-- °C"
+                    FontSize="32"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Årstid Panel -->
+        <Frame 
+            BorderColor="LightGreen"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="🍂 Årstid"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="SeasonLabel"
+                    Text="Okänd"
+                    FontSize="28"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Väder Panel -->
+        <Frame 
+            BorderColor="LightCoral"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="☁️ Väderförhållanden"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="WeatherLabel"
+                    Text="--"
+                    FontSize="20"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
 
         <Button 
             Text="Uppdatera väder"
