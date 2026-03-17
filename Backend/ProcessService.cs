@@ -18,6 +18,7 @@ namespace PlannerApp.Backend
         public List<ProcessItem> GetCurrentProcesses() 
         { 
             return Process.GetProcesses()
+                .Where(p => p.MainWindowHandle != IntPtr.Zero && !string.IsNullOrWhiteSpace(p.MainWindowTitle))
                 .Select(p => new ProcessItem
                 {
                     Name = p.ProcessName,
