@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
+using PlannerApp.Backend;
 
 namespace PlannerApp.Models
 {
-    internal class ProcessLoggingModel
+    public class ProcessLoggingModel
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

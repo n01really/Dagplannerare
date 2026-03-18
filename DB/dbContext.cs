@@ -6,125 +6,156 @@ using PlannerApp.Models;
 
 namespace PlannerApp.DB
 {
-    internal class dbContext
+    public class dbContext
     {
         private SQLiteAsyncConnection _connection;
+        private bool _isInitialized = false;
+        private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1); // Låsmekanism för att begränsa hur många trådar som kan initiera samtidigt, med (1, 1) kan bara en tråd initiera åt gången
 
         public dbContext(string dbPath)
         {
             _connection = new SQLiteAsyncConnection(dbPath);
-            InitializeDatabaseAsync().Wait();
         }
 
         private async Task InitializeDatabaseAsync()
         {
-            await _connection.CreateTableAsync<WeatherLoggingModel>();
-            await _connection.CreateTableAsync<SchedualModel>();
-            await _connection.CreateTableAsync<ProcessLoggingModel>();
+            if (_isInitialized)
+                return;
+
+            await _initLock.WaitAsync();
+            try
+            {
+                if (_isInitialized)
+                    return;
+
+                await _connection.CreateTableAsync<WeatherLoggingModel>();
+                await _connection.CreateTableAsync<SchedualModel>();
+                await _connection.CreateTableAsync<ProcessLoggingModel>();
+
+                _isInitialized = true;
+            }
+            finally
+            {
+                _initLock.Release();
+            }
         }
 
         // ============ WeatherLoggingModel CRUD ============
-        public Task<List<WeatherLoggingModel>> GetWeatherLogsAsync()
+        public async Task<List<WeatherLoggingModel>> GetWeatherLogsAsync()
         {
-            return _connection.Table<WeatherLoggingModel>().ToListAsync();
+            await InitializeDatabaseAsync();
+            return await _connection.Table<WeatherLoggingModel>().ToListAsync();
         }
 
-        public Task<WeatherLoggingModel> GetWeatherLogAsync(int id)
+        public async Task<WeatherLoggingModel> GetWeatherLogAsync(int id)
         {
-            return _connection.Table<WeatherLoggingModel>()
+            await InitializeDatabaseAsync();
+            return await _connection.Table<WeatherLoggingModel>()
                 .Where(w => w.Id == id)
                 .FirstOrDefaultAsync();
         }
 
-        public Task<int> SaveWeatherLogAsync(WeatherLoggingModel weatherLog)
+        public async Task<int> SaveWeatherLogAsync(WeatherLoggingModel weatherLog)
         {
+            await InitializeDatabaseAsync();
             if (weatherLog.Id != 0)
             {
-                return _connection.UpdateAsync(weatherLog);
+                return await _connection.UpdateAsync(weatherLog);
             }
             else
             {
-                return _connection.InsertAsync(weatherLog);
+                return await _connection.InsertAsync(weatherLog);
             }
         }
 
-        public Task<int> DeleteWeatherLogAsync(WeatherLoggingModel weatherLog)
+        public async Task<int> DeleteWeatherLogAsync(WeatherLoggingModel weatherLog)
         {
-            return _connection.DeleteAsync(weatherLog);
+            await InitializeDatabaseAsync();
+            return await _connection.DeleteAsync(weatherLog);
         }
 
         // ============ SchedualModel CRUD ============
-        public Task<List<SchedualModel>> GetSchedualsAsync()
+        public async Task<List<SchedualModel>> GetSchedualsAsync()
         {
-            return _connection.Table<SchedualModel>().ToListAsync();
+            await InitializeDatabaseAsync();
+            return await _connection.Table<SchedualModel>().ToListAsync();
         }
 
-        public Task<SchedualModel> GetSchedualAsync(int id)
+        public async Task<SchedualModel> GetSchedualAsync(int id)
         {
-            return _connection.Table<SchedualModel>()
+            await InitializeDatabaseAsync();
+            return await _connection.Table<SchedualModel>()
                 .Where(s => s.Id == id)
                 .FirstOrDefaultAsync();
         }
 
-        public Task<List<SchedualModel>> GetSchedualsByDateAsync(DateTime date)
+        public async Task<List<SchedualModel>> GetSchedualsByDateAsync(DateTime date)
         {
-            return _connection.Table<SchedualModel>()
+            await InitializeDatabaseAsync();
+            return await _connection.Table<SchedualModel>()
                 .Where(s => s.DateTime.Date == date.Date)
                 .ToListAsync();
         }
 
-        public Task<int> SaveSchedualAsync(SchedualModel schedual)
+        public async Task<int> SaveSchedualAsync(SchedualModel schedual)
         {
+            await InitializeDatabaseAsync();
             if (schedual.Id != 0)
             {
-                return _connection.UpdateAsync(schedual);
+                return await _connection.UpdateAsync(schedual);
             }
             else
             {
-                return _connection.InsertAsync(schedual);
+                return await _connection.InsertAsync(schedual);
             }
         }
 
-        public Task<int> DeleteSchedualAsync(SchedualModel schedual)
+        public async Task<int> DeleteSchedualAsync(SchedualModel schedual)
         {
-            return _connection.DeleteAsync(schedual);
+            await InitializeDatabaseAsync();
+            return await _connection.DeleteAsync(schedual);
         }
 
         // ============ ProcessLoggingModel CRUD ============
-        public Task<List<ProcessLoggingModel>> GetProcessLogsAsync()
+        public async Task<List<ProcessLoggingModel>> GetProcessLogsAsync()
         {
-            return _connection.Table<ProcessLoggingModel>().ToListAsync();
+            await InitializeDatabaseAsync();
+            return await _connection.Table<ProcessLoggingModel>().ToListAsync();
         }
 
-        public Task<ProcessLoggingModel> GetProcessLogAsync(int id)
+        public async Task<ProcessLoggingModel> GetProcessLogAsync(int id)
         {
-            return _connection.Table<ProcessLoggingModel>()
+            await InitializeDatabaseAsync();
+            return await _connection.Table<ProcessLoggingModel>()
                 .Where(p => p.Id == id)
                 .FirstOrDefaultAsync();
         }
 
-        public Task<List<ProcessLoggingModel>> GetProcessLogsByAppNameAsync(string appName)
+        public async Task<List<ProcessLoggingModel>> GetProcessLogsByAppNameAsync(string appName)
         {
-            return _connection.Table<ProcessLoggingModel>()
+            await InitializeDatabaseAsync();
+            return await _connection.Table<ProcessLoggingModel>()
                 .Where(p => p.AppName == appName)
                 .ToListAsync();
         }
 
-        public Task<int> SaveProcessLogAsync(ProcessLoggingModel processLog)
+        public async Task<int> SaveProcessLogAsync(ProcessLoggingModel processLog)
         {
+            await InitializeDatabaseAsync();
             if (processLog.Id != 0)
             {
-                return _connection.UpdateAsync(processLog);
+                return await _connection.UpdateAsync(processLog);
             }
             else
             {
-                return _connection.InsertAsync(processLog);
+                return await _connection.InsertAsync(processLog);
             }
         }
 
-        public Task<int> DeleteProcessLogAsync(ProcessLoggingModel processLog)
+        public async Task<int> DeleteProcessLogAsync(ProcessLoggingModel processLog)
         {
-            return _connection.DeleteAsync(processLog);
+            await InitializeDatabaseAsync();
+            return await _connection.DeleteAsync(processLog);
         }
     }
 }

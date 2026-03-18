@@ -7,7 +7,7 @@ using SQLite;
 
 namespace PlannerApp.Models
 {
-    internal class WeatherLoggingModel
+    public class WeatherLoggingModel
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

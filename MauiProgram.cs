@@ -19,8 +19,18 @@ namespace PlannerApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            string dbFolder = Path.Combine(FileSystem.AppDataDirectory, "DB");
+            Directory.CreateDirectory(dbFolder);
+            string dbPath = Path.Combine(dbFolder, "plannerapp.db3");
+
+            builder.Services.AddSingleton(new DB.dbContext(dbPath));
+
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<WeatherPage>();
+            builder.Services.AddSingleton<AnalysisPage>();
+
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();

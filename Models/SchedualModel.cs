@@ -7,7 +7,7 @@ using SQLite;
 
 namespace PlannerApp.Models
 {
-    internal class SchedualModel //I dont care if it is misspeled, i am dyslecic and it is funny. ps i wrote dyslexic wrong on purpose because it is also funny.
+    public class SchedualModel //I dont care if it is misspeled, i am dyslecic and it is funny. ps i wrote dyslexic wrong on purpose because it is also funny.
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

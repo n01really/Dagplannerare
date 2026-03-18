@@ -1,5 +1,6 @@
 using PlannerApp.APIs;
 using PlannerApp.Math;
+using PlannerApp.DB;
 
 namespace PlannerApp;
 
@@ -7,10 +8,12 @@ public partial class WeatherPage : ContentPage
 {
 	private readonly SmhiAPI _smhiAPI = new SmhiAPI();
 	private readonly SeasonCalculator _seasonCalculator = new SeasonCalculator();
-	
-    public WeatherPage()
+    private readonly dbContext _dbContext;
+
+    public WeatherPage(dbContext database)
 	{
 		InitializeComponent();
+        _dbContext = database;
 	}
 
     private async void OnUpdateWeatherClicked(object sender, EventArgs e)
