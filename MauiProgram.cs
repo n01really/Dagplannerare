@@ -21,7 +21,7 @@ namespace PlannerApp
 
             string dbFolder = Path.Combine(FileSystem.AppDataDirectory, "DB");
             Directory.CreateDirectory(dbFolder);
-            string dbPath = Path.Combine(dbFolder, "plannerapp.db3");
+            string dbPath = Path.Combine(dbFolder, "plannerapp.db3"); //C:\Users\trygg\AppData\Local\PlannerApp\DB\
 
             builder.Services.AddSingleton(new DB.dbContext(dbPath));
 
