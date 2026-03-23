@@ -43,20 +43,24 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="SRC\Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="SRC\Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<MauiImage Include="SRC\Resources\Images\*" />
+		<MauiImage Update="SRC\Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Include="SRC\Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Include="SRC\Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Include="SRC\Platforms\Android\Resources\values\colors.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,21 +73,30 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="popups\BookingPopUp.xaml.cs">
+	  <Compile Update="SRC\popups\BookingPopUp.xaml.cs">
 	    <DependentUpon>BookingPopUp.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="AnalysisPage.xaml">
+	  <MauiFont Update="C:\Users\trygg\.nuget\packages\syncfusion.maui.core\32.2.8\buildTransitive\..\buildTransitive\Resources\Fonts\MauiMaterialAssets.ttf" Link="SRC\Resources\Fonts\MauiMaterialAssets.ttf" />
+	  <MauiFont Update="C:\Users\trygg\.nuget\packages\syncfusion.maui.toolkit\1.0.9\buildTransitive\..\buildTransitive\Resources\Fonts\MauiMaterialAssets.ttf" Link="SRC\Resources\Fonts\MauiMaterialAssets.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="SRC\AnalysisPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="popups\BookingPopUp.xaml">
+	  <MauiXaml Update="SRC\popups\BookingPopUp.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="WeatherPage.xaml">
+	  <MauiXaml Update="SRC\WeatherPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="tests\" />
 	</ItemGroup>
 
 </Project>
