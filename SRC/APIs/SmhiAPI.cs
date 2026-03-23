@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlannerApp.APIs
+namespace PlannerApp.SRC.APIs
 {
     public class SmhiAPI
     {
@@ -43,7 +43,7 @@ namespace PlannerApp.APIs
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Väderfel: {ex.Message}");
+                Debug.WriteLine($"Väderfel: {ex.Message}");
                 return null;
             }
         }
@@ -89,7 +89,7 @@ namespace PlannerApp.APIs
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Väderfel: {ex.Message}");
+                Debug.WriteLine($"Väderfel: {ex.Message}");
                 return null;
             }
         }
@@ -109,12 +109,12 @@ namespace PlannerApp.APIs
                 var startDate = endDate.AddDays(-daysBack);
                 
              
-                System.Diagnostics.Debug.WriteLine("Historisk data kräver Metobs API implementation");
+                Debug.WriteLine("Historisk data kräver Metobs API implementation");
                 return null;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Historisk data fel: {ex.Message}");
+                Debug.WriteLine($"Historisk data fel: {ex.Message}");
                 return null;
             }
         }

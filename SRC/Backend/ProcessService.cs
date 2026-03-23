@@ -5,7 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace PlannerApp.Backend
+<<<<<<< TODO: Unmerged change from project 'PlannerApp (net9.0-android)', Before:
+=======
+using PlannerApp;
+using PlannerApp.Backend;
+using PlannerApp.SRC.Backend;
+>>>>>>> After
+
+namespace PlannerApp.SRC.Backend
 {
     public class ProcessItem
     {
@@ -18,7 +25,7 @@ namespace PlannerApp.Backend
         public List<ProcessItem> GetCurrentProcesses() 
         { 
             return Process.GetProcesses()
-                .Where(p => p.MainWindowHandle != IntPtr.Zero && !string.IsNullOrWhiteSpace(p.MainWindowTitle))
+                .Where(p => p.MainWindowHandle != nint.Zero && !string.IsNullOrWhiteSpace(p.MainWindowTitle))
                 .Select(p => new ProcessItem
                 {
                     Name = p.ProcessName,

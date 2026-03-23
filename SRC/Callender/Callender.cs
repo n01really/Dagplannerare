@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Syncfusion.Maui.Toolkit.Calendar;
-using Microsoft.Maui.Controls.Shapes; 
+using Microsoft.Maui.Controls.Shapes;
 
-namespace PlannerApp.Callender
+namespace PlannerApp.SRC.Callender
 {
     /// <summary>
     /// Kalender-komponent som visar en månadvy med integrerade timmar i varje dag.

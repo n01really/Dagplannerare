@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SQLite;
-using PlannerApp.Models;
+using PlannerApp.SRC.Models;
 
-namespace PlannerApp.DB
+namespace PlannerApp.SRC.DB
 {
     public class dbContext
     {

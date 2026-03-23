@@ -1,6 +1,7 @@
 ﻿using PlannerApp.popups;
 using CommunityToolkit.Maui.Views;
-using PlannerApp.DB;
+using PlannerApp.SRC.Callender;
+using PlannerApp.SRC.DB;
 
 namespace PlannerApp
 {
@@ -14,7 +15,13 @@ namespace PlannerApp
 
         // Instans av kalenderkomponenten som hanterar visning och interaktion
 
+
+<<<<<<< TODO: Unmerged change from project 'PlannerApp (net9.0-android)', Before:
         private Callender.Callender _calender;
+=======
+        private Callender _calender;
+>>>>>>> After
+        private SRC.Callender.Callender _calender;
         
         #endregion
         

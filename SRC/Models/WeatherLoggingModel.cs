@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SQLite;
 
-namespace PlannerApp.Models
+namespace PlannerApp.SRC.Models
 {
     public class WeatherLoggingModel
     {

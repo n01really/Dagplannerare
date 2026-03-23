@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PlannerApp.APIs;
+using PlannerApp.SRC.APIs;
 
-namespace PlannerApp.Math
+namespace PlannerApp.SRC.Math
 {
 
         // metrologisk vår är när dygnsmedeltemperaturen är över 0°C men under 10°C i minst 7 dagar i rad.

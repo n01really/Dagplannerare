@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
-using CommunityToolkit.Maui; // Ensure this using is present
+using CommunityToolkit.Maui;
 
-namespace PlannerApp
+namespace PlannerApp.SRC
 {
     public static class MauiProgram
     {

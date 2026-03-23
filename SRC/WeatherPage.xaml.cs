@@ -1,6 +1,6 @@
-using PlannerApp.APIs;
-using PlannerApp.Math;
-using PlannerApp.DB;
+using PlannerApp.SRC.APIs;
+using PlannerApp.SRC.DB;
+using PlannerApp.SRC.Math;
 
 namespace PlannerApp;
 

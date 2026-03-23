@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
-using PlannerApp.Backend;
 
-namespace PlannerApp.Models
+namespace PlannerApp.SRC.Models
 {
-    public class ProcessLoggingModel
+    public class SchedualModel //I dont care if it is misspeled, i am dyslecic and it is funny. ps i wrote dyslexic wrong on purpose because it is also funny.
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -17,5 +16,7 @@ namespace PlannerApp.Models
         public int AppId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public string Description { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }
