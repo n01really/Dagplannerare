@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36915.13 d17.14
+VisualStudioVersion = 17.14.36915.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlannerApp", "PlannerApp.csproj", "{CDFF9B55-70B3-4DE6-A94B-C14768597AB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingTests", "..\BookingTests\BookingTests.csproj", "{58F8F261-F661-477A-B40C-6BEE39E51565}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{CDFF9B55-70B3-4DE6-A94B-C14768597AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDFF9B55-70B3-4DE6-A94B-C14768597AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDFF9B55-70B3-4DE6-A94B-C14768597AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F8F261-F661-477A-B40C-6BEE39E51565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F8F261-F661-477A-B40C-6BEE39E51565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F8F261-F661-477A-B40C-6BEE39E51565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F8F261-F661-477A-B40C-6BEE39E51565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
