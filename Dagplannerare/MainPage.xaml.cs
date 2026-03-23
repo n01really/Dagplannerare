@@ -1,34 +1,30 @@
 ﻿using PlannerApp.popups;
 using CommunityToolkit.Maui.Views;
-using PlannerApp.DB;
 
 namespace PlannerApp
 {
-
-    // Huvudsida för planeringsappen som visar kalendern med timmar
-
+    /// <summary>
+    /// Huvudsida för planeringsappen som visar kalendern med timmar
+    /// </summary>
     public partial class MainPage : ContentPage
     {
         #region Fields
         
-
-        // Instans av kalenderkomponenten som hanterar visning och interaktion
-
+        /// <summary>
+        /// Instans av kalenderkomponenten som hanterar visning och interaktion
+        /// </summary>
         private Callender.Callender _calender;
         
         #endregion
         
         #region Constructor
-
-        private readonly dbContext _dbContext;
-
-
-        // Initierar MainPage och konfigurerar kalendern
-
-        public MainPage(dbContext database)
+        
+        /// <summary>
+        /// Initierar MainPage och konfigurerar kalendern
+        /// </summary>
+        public MainPage()
         {
             InitializeComponent();
-            _dbContext = database;
             
             // Skapar en ny instans av kalenderkomponenten
             _calender = new Callender.Callender();
