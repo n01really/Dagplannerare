@@ -4,13 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-
-<<<<<<< TODO: Unmerged change from project 'PlannerApp (net9.0-android)', Before:
-=======
-using PlannerApp;
-using PlannerApp.Backend;
 using PlannerApp.SRC.Backend;
->>>>>>> After
 
 namespace PlannerApp.SRC.Backend
 {

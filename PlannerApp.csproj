@@ -19,6 +19,9 @@
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+		<EnableDefaultCompileItems>true</EnableDefaultCompileItems>
 
 		<!-- Display name -->
 		<ApplicationTitle>PlannerApp</ApplicationTitle>
@@ -43,7 +46,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="SRC\Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="SRC\Resources\AppIcon\appicon.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="SRC\Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -60,7 +63,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Include="SRC\Platforms\Android\Resources\values\colors.xml" />
+	  <AndroidResource Include="Platforms\Android\Resources\values\colors.xml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -96,7 +99,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="tests\" />
+		<!-- Exclude test projects -->
+		<Compile Remove="tests\**\*.cs" />
+		<EmbeddedResource Remove="tests\**\*" />
+		<None Remove="tests\**\*" />
 	</ItemGroup>
 
 </Project>

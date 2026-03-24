@@ -1,4 +1,6 @@
-﻿namespace BookingTests
+﻿using Xunit;
+
+namespace BookingTests
 {
     public class UnitTest1
     {

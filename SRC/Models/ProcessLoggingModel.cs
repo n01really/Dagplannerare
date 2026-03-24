@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
-using PlannerApp.Backend;
+using PlannerApp.SRC.Backend;
 
 namespace PlannerApp.SRC.Models
 {

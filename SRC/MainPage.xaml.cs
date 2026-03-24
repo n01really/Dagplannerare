@@ -15,12 +15,6 @@ namespace PlannerApp
 
         // Instans av kalenderkomponenten som hanterar visning och interaktion
 
-
-<<<<<<< TODO: Unmerged change from project 'PlannerApp (net9.0-android)', Before:
-        private Callender.Callender _calender;
-=======
-        private Callender _calender;
->>>>>>> After
         private SRC.Callender.Callender _calender;
         
         #endregion
@@ -38,7 +32,7 @@ namespace PlannerApp
             _dbContext = database;
             
             // Skapar en ny instans av kalenderkomponenten
-            _calender = new Callender.Callender();
+            _calender = new SRC.Callender.Callender();
 
             // Sätter kalendern som innehåll i CalenderContainer (definierad i MainPage.xaml)
             CalenderContainer.Content = _calender.Calendar;
