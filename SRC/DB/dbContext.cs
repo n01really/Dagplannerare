@@ -40,6 +40,16 @@ namespace PlannerApp.SRC.DB
             }
         }
 
+        public async Task CloseAsync()
+        {
+            if (_connection != null)
+            {
+                await _connection.CloseAsync();
+                _connection = null;
+                _isInitialized = false;
+            }
+        }
+
         // ============ WeatherLoggingModel CRUD ============
         public async Task<List<WeatherLoggingModel>> GetWeatherLogsAsync()
         {

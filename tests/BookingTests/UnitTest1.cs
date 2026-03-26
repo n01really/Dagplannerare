@@ -191,6 +191,12 @@ namespace BookingTests
 
         public void Dispose()
         {
+            // Stäng databasanslutningen först
+            _dbContext.CloseAsync().GetAwaiter().GetResult();
+            
+            // Vänta en kort stund för att säkerställa att filen frigörs
+            System.Threading.Thread.Sleep(100);
+            
             if (File.Exists(_testDbPath))
             {
                 File.Delete(_testDbPath);
