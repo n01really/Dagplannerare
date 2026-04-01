@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Views;
 using PlannerApp.SRC.Callender;
 using PlannerApp.SRC.DB;
+using Microsoft.Maui.ApplicationModel;
 
 namespace PlannerApp
 {
@@ -36,6 +37,9 @@ namespace PlannerApp
 
             // Sätter kalendern som innehåll i CalenderContainer (definierad i MainPage.xaml)
             CalenderContainer.Content = _calender.Calendar;
+
+            // Sätt databaskontext så Callender kan läsa väderloggar (startar intern laddning)
+            _calender.SetDatabase(_dbContext);
             
             // Prenumererar på HourSelected-eventet för att hantera när användaren väljer en timme
             _calender.HourSelected += async (sender, dateTime) =>
@@ -46,6 +50,32 @@ namespace PlannerApp
             };
         }
         
+        #endregion
+
+        #region Lifecycle
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            // Säkerställ att väderloggar är laddade innan kalendern visas
+            // SetDatabase kallas i konstruktorn men vi väntar här in laddningen så UI visar data direkt.
+            if (_calender != null)
+            {
+                await _calender.RefreshWeatherLogsAsync();
+
+                // Tvinga layoutuppdatering så cellerna binder om och visar temperaturer
+                try
+                {
+                    _calender.Calendar.InvalidateMeasure();
+                }
+                catch
+                {
+                    // Ignore if control doesn't support it
+                }
+            }
+        }
+
         #endregion
     }
 }
