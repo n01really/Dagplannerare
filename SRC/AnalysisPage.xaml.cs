@@ -16,16 +16,99 @@ public partial class AnalysisPage : ContentPage
 		_dbContext = database;
 	}
 
-	private async void OnRefreshProcessesClicked(object sender, EventArgs e)
+	private async void OnShowTopAppsClicked(object sender, EventArgs e)
 	{
+		
+		App1NameLabel.Text = "Laddar...";
+		App2NameLabel.Text = "Laddar...";
+		App3NameLabel.Text = "Laddar...";
+		App4NameLabel.Text = "Laddar...";
+		App5NameLabel.Text = "Laddar...";
+
+		App1TimeLabel.Text = "-- minuter";
+		App2TimeLabel.Text = "-- minuter";
+		App3TimeLabel.Text = "-- minuter";
+		App4TimeLabel.Text = "-- minuter";
+		App5TimeLabel.Text = "-- minuter";
+
+		// Hämta aktuella processer och logga dem först
 		var processes = _processService.GetUserApplications();
-
-		ProcessList.ItemsSource = processes;
-
-		// Logga processer till databasen
 		await LogProcessesToDatabase(processes);
 
-		await DisplayAlert("Processer loggade", $"{processes.Count} användarappar har sparats i databasen.", "OK");
+		// Hämta alla processloggar från databasen
+		var allProcessLogs = await _dbContext.GetProcessLogsAsync();
+
+		// Gruppera per app och beräkna total tid
+		var appUsageStats = allProcessLogs
+			.GroupBy(p => p.AppName)
+			.Select(g => new
+			{
+				AppName = g.Key,
+				TotalMinutes = g.Sum(p =>
+				{
+					var duration = p.EndTime - p.StartTime;
+					return duration.TotalMinutes;
+				})
+			})
+			.OrderByDescending(a => a.TotalMinutes)
+			.Take(5)
+			.ToList();
+
+		
+		if (appUsageStats.Count > 0)
+		{
+			App1NameLabel.Text = appUsageStats[0].AppName;
+			App1TimeLabel.Text = $"{Math.Round(appUsageStats[0].TotalMinutes, 1)} minuter";
+		}
+		else
+		{
+			App1NameLabel.Text = "--";
+			App1TimeLabel.Text = "-- minuter";
+		}
+
+		if (appUsageStats.Count > 1)
+		{
+			App2NameLabel.Text = appUsageStats[1].AppName;
+			App2TimeLabel.Text = $"{Math.Round(appUsageStats[1].TotalMinutes, 1)} minuter";
+		}
+		else
+		{
+			App2NameLabel.Text = "--";
+			App2TimeLabel.Text = "-- minuter";
+		}
+
+		if (appUsageStats.Count > 2)
+		{
+			App3NameLabel.Text = appUsageStats[2].AppName;
+			App3TimeLabel.Text = $"{Math.Round(appUsageStats[2].TotalMinutes, 1)} minuter";
+		}
+		else
+		{
+			App3NameLabel.Text = "--";
+			App3TimeLabel.Text = "-- minuter";
+		}
+
+		if (appUsageStats.Count > 3)
+		{
+			App4NameLabel.Text = appUsageStats[3].AppName;
+			App4TimeLabel.Text = $"{Math.Round(appUsageStats[3].TotalMinutes, 1)} minuter";
+		}
+		else
+		{
+			App4NameLabel.Text = "--";
+			App4TimeLabel.Text = "-- minuter";
+		}
+
+		if (appUsageStats.Count > 4)
+		{
+			App5NameLabel.Text = appUsageStats[4].AppName;
+			App5TimeLabel.Text = $"{Math.Round(appUsageStats[4].TotalMinutes, 1)} minuter";
+		}
+		else
+		{
+			App5NameLabel.Text = "--";
+			App5TimeLabel.Text = "-- minuter";
+		}
 	}
 
 	private async Task LogProcessesToDatabase(List<ProcessItem> processes)
@@ -36,14 +119,14 @@ public partial class AnalysisPage : ContentPage
 		{
 			currentProcessIds.Add(process.Id);
 
-			// Om vi inte redan spårar denna process, lägg till den
+			
 			if (!_trackedProcesses.ContainsKey(process.Id))
 			{
 				_trackedProcesses[process.Id] = process.StartTime;
 			}
 		}
 
-		// Hitta processer som har stängts (fanns förut men inte nu)
+		
 		var closedProcesses = _trackedProcesses.Keys
 			.Where(id => !currentProcessIds.Contains(id))
 			.ToList();
@@ -55,7 +138,7 @@ public partial class AnalysisPage : ContentPage
 			{
 				var processLog = new ProcessLoggingModel
 				{
-					AppName = $"Process {closedProcessId}", // Vi har inte namnet längre
+					AppName = $"Process {closedProcessId}", 
 					AppId = closedProcessId,
 					StartTime = _trackedProcesses[closedProcessId],
 					EndTime = DateTime.Now
@@ -70,7 +153,7 @@ public partial class AnalysisPage : ContentPage
 			}
 		}
 
-		// Logga aktiva processer (spara aktuell session)
+		
 		foreach (var process in processes)
 		{
 			try
@@ -80,7 +163,7 @@ public partial class AnalysisPage : ContentPage
 					AppName = process.Name,
 					AppId = process.Id,
 					StartTime = _trackedProcesses[process.Id],
-					EndTime = DateTime.Now // Uppdateras varje gång
+					EndTime = DateTime.Now 
 				};
 
 				await _dbContext.SaveProcessLogAsync(processLog);
