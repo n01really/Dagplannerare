@@ -30,7 +30,15 @@
             <Editor x:Name="DescriptionEditor"
                     Placeholder="Beskrivning"
                     HeightRequest="100"/>
-            
+            <Label Text="välj app"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+            <Picker x:Name="AppPicker"
+                    Title="Välj en app"
+                    HorizontalOptions="FillAndExpand"
+                    ItemDisplayBinding="{Binding Name}"/>
+
             <HorizontalStackLayout Spacing="15" 
                                    HorizontalOptions="End">
                 <Button Text="Avbryt" 

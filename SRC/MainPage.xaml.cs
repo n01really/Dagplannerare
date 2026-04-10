@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Views;
 using PlannerApp.SRC.Callender;
 using PlannerApp.SRC.DB;
 using Microsoft.Maui.ApplicationModel;
+using PlannerApp.SRC.Backend;
 
 namespace PlannerApp
 {
@@ -17,9 +18,10 @@ namespace PlannerApp
         // Instans av kalenderkomponenten som hanterar visning och interaktion
 
         private SRC.Callender.Callender _calender;
-        
+        private readonly AppService _appService;
+
         #endregion
-        
+
         #region Constructor
 
         private readonly dbContext _dbContext;
@@ -27,11 +29,11 @@ namespace PlannerApp
 
         // Initierar MainPage och konfigurerar kalendern
 
-        public MainPage(dbContext database)
+        public MainPage(dbContext database, AppService appService)
         {
             InitializeComponent();
             _dbContext = database;
-            
+            _appService = appService;
             // Skapar en ny instans av kalenderkomponenten
             _calender = new SRC.Callender.Callender();
 
@@ -44,7 +46,8 @@ namespace PlannerApp
             // Prenumererar på HourSelected-eventet för att hantera när användaren väljer en timme
             _calender.HourSelected += async (sender, dateTime) =>
             {
-                var popup = new BookingPopUp(dateTime);
+                var installedApps = _appService.GetInstalledApps();
+                var popup = new BookingPopUp(dateTime, installedApps);
                 var result = await this.ShowPopupAsync(popup);
                 
             };

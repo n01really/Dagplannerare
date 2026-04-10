@@ -27,6 +27,7 @@ namespace PlannerApp.SRC
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<WeatherPage>();
             builder.Services.AddSingleton<AnalysisPage>();
+            builder.Services.AddSingleton<PlannerApp.SRC.Backend.AppService>();
 
 #if DEBUG
             builder.Logging.AddDebug();
