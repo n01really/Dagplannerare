@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using PlannerApp.SRC.Models;
-
+using System.IO;
 
 namespace PlannerApp.SRC.Backend
 {
@@ -28,13 +28,16 @@ namespace PlannerApp.SRC.Backend
                                 var name = appKey.GetValue("DisplayName") as string;
                                 if (!string.IsNullOrEmpty(name))
                                 {
-                                    apps.Add(new AppsModels
+                                    // Kontrollera om appen har en exe-fil
+                                    if (HasExecutable(appKey))
                                     {
-                                        Name = name,
-                                        Version = appKey.GetValue("DisplayVersion") as string,
-                                        Publisher = appKey.GetValue("Publisher") as string
-
-                                    });
+                                        apps.Add(new AppsModels
+                                        {
+                                            Name = name,
+                                            Version = appKey.GetValue("DisplayVersion") as string,
+                                            Publisher = appKey.GetValue("Publisher") as string
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -43,6 +46,33 @@ namespace PlannerApp.SRC.Backend
                 
             }
             return apps;
+        }
+
+        private bool HasExecutable(RegistryKey appKey)
+        {
+            // Kolla InstallLocation
+            var installLocation = appKey.GetValue("InstallLocation") as string;
+            if (!string.IsNullOrEmpty(installLocation) && Directory.Exists(installLocation))
+            {
+                if (Directory.GetFiles(installLocation, "*.exe", SearchOption.TopDirectoryOnly).Length > 0)
+                {
+                    return true;
+                }
+            }
+
+            // Kolla DisplayIcon (pekar ofta direkt på exe-filen)
+            var displayIcon = appKey.GetValue("DisplayIcon") as string;
+            if (!string.IsNullOrEmpty(displayIcon))
+            {
+                // Ta bort eventuella index (t.ex. ",0" i slutet)
+                var iconPath = displayIcon.Split(',')[0].Trim('"');
+                if (File.Exists(iconPath) && iconPath.EndsWith(".exe", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
