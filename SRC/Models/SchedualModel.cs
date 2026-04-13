@@ -20,5 +20,6 @@ namespace PlannerApp.SRC.Models
         public string Description { get; set; }
         public DateTime DateTime { get; set; }
         public string BackgroundColor { get; set; }
+        public bool Executed { get; set; }
     }
 }

@@ -167,5 +167,17 @@ namespace PlannerApp.SRC.DB
             await InitializeDatabaseAsync();
             return await _connection.DeleteAsync(processLog);
         }
+
+        public async Task AddProcessLogAsync(ProcessLoggingModel log)
+        {
+            await InitializeDatabaseAsync();
+            await _connection.InsertAsync(log);
+        }
+
+        public async Task UpdateScheduleAsync(SchedualModel schedule)
+        {
+            await InitializeDatabaseAsync();
+            await _connection.UpdateAsync(schedule);
+        }
     }
 }
