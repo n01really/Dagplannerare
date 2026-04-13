@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using PlannerApp.SRC.Models;
 using System.IO;
+using System.Linq;
 
 namespace PlannerApp.SRC.Backend
 {
@@ -45,7 +46,7 @@ namespace PlannerApp.SRC.Backend
                 }
                 
             }
-            return apps;
+            return apps.OrderBy(app => app.Name).ToList();
         }
 
         private bool HasExecutable(RegistryKey appKey)
