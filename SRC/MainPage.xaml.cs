@@ -21,6 +21,7 @@ namespace PlannerApp
         private SRC.Callender.Callender _calender;
         private readonly AppService _appService;
         private readonly dbContext _dbContext;
+        private readonly LaunchService _launchService; 
 
         #endregion
 
@@ -43,9 +44,9 @@ namespace PlannerApp
             // Sätt databaskontext så Callender kan läsa väderloggar (startar intern laddning)
             _calender.SetDatabase(_dbContext);
 
-            // Starta LaunchService Startar timern som kollar schemalagda appar
-            var launchService = new LaunchService(_dbContext);
-            launchService.StartMonitoring();
+            // FIXED: Spara LaunchService som instansfält så den inte tas bort
+            _launchService = new LaunchService(_dbContext);
+            _launchService.StartMonitoring();
 
             // Prenumererar på HourSelected-eventet för att hantera när användaren väljer en timme
             _calender.HourSelected += async (sender, dateTime) =>

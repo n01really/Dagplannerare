@@ -3,6 +3,7 @@ using PlannerApp.SRC.Backend;
 using PlannerApp.SRC.Models;
 using PlannerApp.SRC.DB;
 using Microsoft.Maui.Controls.Shapes;
+using System.Diagnostics;
 
 namespace PlannerApp.popups;
 
@@ -107,7 +108,11 @@ public partial class BookingPopUp : Popup
             {
                 title = selectedApp.Name;
             }
-            appName = selectedApp.Name;
+            // FIXED: Spara hela sökvägen till programmet, inte bara namnet
+            appName = selectedApp.Path;  // Path innehåller fullständig sökväg
+            appId = selectedApp.Id;
+            
+            Debug.WriteLine($"Schemalagt program: {title} ({appName}) för {startTime}");
         }
 
         var schedual = new SchedualModel
@@ -119,10 +124,13 @@ public partial class BookingPopUp : Popup
             StartTime = startTime,
             EndTime = endTime,
             Description = DescriptionEditor.Text ?? "",
-            BackgroundColor = _selectedColor
+            BackgroundColor = _selectedColor,
+            Executed = false  // FIXED: Sätt explicit till false så programmet kan köras
         };
 
         await _dbContext.SaveSchedualAsync(schedual);
+        
+        Debug.WriteLine($"Schemat sparat - Executed: {schedual.Executed}, AppId: {schedual.AppId}");
         
         Close(schedual);
     }
