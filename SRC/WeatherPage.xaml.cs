@@ -1,6 +1,7 @@
 using PlannerApp.SRC.APIs;
 using PlannerApp.SRC.DB;
 using PlannerApp.SRC.Math;
+using PlannerApp.SRC.Models;
 
 namespace PlannerApp;
 
@@ -41,7 +42,11 @@ public partial class WeatherPage : ContentPage
             SeasonLabel.Text = currentSeason;
             
             // Uppdatera väderförhållanden (baserat på temperatur)
-            WeatherLabel.Text = GetWeatherDescription(temp.Value);
+            string weatherDescription = GetWeatherDescription(temp.Value);
+            WeatherLabel.Text = weatherDescription;
+
+            // Spara väderdata till databasen
+            await SaveCurrentWeatherLog(weatherDescription, temp.Value);
         }
         else
         {
@@ -49,6 +54,26 @@ public partial class WeatherPage : ContentPage
             SeasonLabel.Text = "Okänd";
             WeatherLabel.Text = "--";
             await DisplayAlert("Hoppsan", "Kunde inte hämta vädret. Kolla internet och platstjänster.", "OK");
+        }
+    }
+
+    private async Task SaveCurrentWeatherLog(string weatherCondition, double temperature)
+    {
+        try
+        {
+            var weatherLog = new WeatherLoggingModel
+            {
+                WeatherCondition = weatherCondition,
+                Temperature = temperature,
+                DateTime = DateTime.Now
+            };
+
+            await _dbContext.SaveWeatherLogAsync(weatherLog);
+        }
+        catch (Exception ex)
+        {
+            // Logga eventuella fel, men fortsätt visa vädret för användaren
+            System.Diagnostics.Debug.WriteLine($"Kunde inte spara väderlog: {ex.Message}");
         }
     }
 

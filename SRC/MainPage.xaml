@@ -4,6 +4,20 @@
              x:Class="PlannerApp.MainPage"
              Title="Kalender">
 
-    <ContentView x:Name="CalenderContainer"/>
+    <Grid RowDefinitions="Auto,*">
+        
+        <Button Grid.Row="0"
+                Text="🔄"
+                Clicked="OnRefreshClicked"
+                BackgroundColor="#2196F3"
+                TextColor="White"
+                Margin="10"
+                HorizontalOptions="Center"
+                WidthRequest="200"/>
+        
+        
+        <ContentView Grid.Row="1" 
+                     x:Name="CalenderContainer"/>
+    </Grid>
 
 </ContentPage>

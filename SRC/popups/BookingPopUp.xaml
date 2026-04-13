@@ -9,43 +9,97 @@
             StrokeThickness="0"
             Padding="20"
             WidthRequest="400"
-            HeightRequest="500">
+            HeightRequest="600">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="15"/>
         </Border.StrokeShape>
         
-        <VerticalStackLayout Spacing="20">
-            <Label Text="Skapa bokning"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"/>
-            
-            <Label x:Name="SelectedTimeLabel"
-                   FontSize="16"
-                   HorizontalOptions="Center"/>
-            
-            <Entry x:Name="TitleEntry"
-                   Placeholder="Titel"/>
-            
-            <Editor x:Name="DescriptionEditor"
-                    Placeholder="Beskrivning"
-                    HeightRequest="100"/>
-            
-            <HorizontalStackLayout Spacing="15" 
-                                   HorizontalOptions="End">
-                <Button Text="Avbryt" 
-                        x:Name="CancelButton"
-                        Clicked="OnCancelClicked"
-                        BackgroundColor="LightGray"
+        <ScrollView>
+            <VerticalStackLayout Spacing="20">
+                <Label Text="Skapa bokning"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="Black"/>
+                
+                <Label x:Name="SelectedTimeLabel"
+                       FontSize="16"
+                       HorizontalOptions="Center"
+                       TextColor="Black"/>
+                
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Från:" 
+                           VerticalOptions="Center"
+                           TextColor="Black"
+                           WidthRequest="50"/>
+                    <TimePicker x:Name="StartTimePicker" 
+                                Format="HH:mm"
+                                HorizontalOptions="FillAndExpand"
+                                TextColor="Black"/>
+                </HorizontalStackLayout>
+                
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Till:" 
+                           VerticalOptions="Center"
+                           TextColor="Black"
+                           WidthRequest="50"/>
+                    <TimePicker x:Name="EndTimePicker" 
+                                Format="HH:mm"
+                                HorizontalOptions="FillAndExpand"
+                                TextColor="Black"/>
+                </HorizontalStackLayout>
+                
+                <Entry x:Name="TitleEntry"
+                       Placeholder="Titel"
+                       TextColor="Black"/>
+                
+                <Editor x:Name="DescriptionEditor"
+                        Placeholder="Beskrivning"
+                        HeightRequest="100"
+                        TextColor="Black"/>
+                
+                <Label Text="välj app"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="Black"/>
+                
+                <Picker x:Name="AppPicker"
+                        Title="Välj en app"
+                        HorizontalOptions="FillAndExpand"
+                        ItemDisplayBinding="{Binding Name}"
                         TextColor="Black"
-                        WidthRequest="100"/>
-                <Button Text="Spara" 
-                        x:Name="SaveButton"
-                        Clicked="OnSaveClicked"
-                        BackgroundColor="#2196F3"
-                        TextColor="White"
-                        WidthRequest="100"/>
-            </HorizontalStackLayout>
-        </VerticalStackLayout>
+                        TitleColor="Gray"/>
+                
+                <Label Text="Välj färg"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       TextColor="Black"/>
+                
+                <FlexLayout x:Name="ColorPalette"
+                            Wrap="Wrap"
+                            JustifyContent="SpaceEvenly"
+                            AlignItems="Center"
+                            HeightRequest="120">
+                </FlexLayout>
+
+                <HorizontalStackLayout Spacing="15" 
+                                       HorizontalOptions="End">
+                    <Button Text="Avbryt" 
+                            x:Name="CancelButton"
+                            Clicked="OnCancelClicked"
+                            BackgroundColor="LightGray"
+                            TextColor="Black"
+                            WidthRequest="100"/>
+                    <Button Text="Spara" 
+                            x:Name="SaveButton"
+                            Clicked="OnSaveClicked"
+                            BackgroundColor="#2196F3"
+                            TextColor="White"
+                            WidthRequest="100"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
     </Border>
 </toolkit:Popup>

@@ -40,6 +40,16 @@ namespace PlannerApp.SRC.DB
             }
         }
 
+        public async Task CloseAsync()
+        {
+            if (_connection != null)
+            {
+                await _connection.CloseAsync();
+                _connection = null;
+                _isInitialized = false;
+            }
+        }
+
         // ============ WeatherLoggingModel CRUD ============
         public async Task<List<WeatherLoggingModel>> GetWeatherLogsAsync()
         {
@@ -156,6 +166,18 @@ namespace PlannerApp.SRC.DB
         {
             await InitializeDatabaseAsync();
             return await _connection.DeleteAsync(processLog);
+        }
+
+        public async Task AddProcessLogAsync(ProcessLoggingModel log)
+        {
+            await InitializeDatabaseAsync();
+            await _connection.InsertAsync(log);
+        }
+
+        public async Task UpdateScheduleAsync(SchedualModel schedule)
+        {
+            await InitializeDatabaseAsync();
+            await _connection.UpdateAsync(schedule);
         }
     }
 }

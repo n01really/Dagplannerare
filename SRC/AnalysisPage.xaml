@@ -3,25 +3,149 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PlannerApp.AnalysisPage"
              Title="AnalysisPage">
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <Button Text="Hämta processer"
-                Clicked="OnRefreshProcessesClicked"
-                HorizontalOptions="Center"/>
+    <VerticalStackLayout Spacing="25" Padding="30" VerticalOptions="Center">
 
-        <CollectionView x:Name="ProcessList">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Padding="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+        <Label 
+            Text="Tryck på knappen för att se dina mest använda appar"
+            FontSize="18"
+            HorizontalOptions="Center" />
 
-                        <Label Grid.Column="0" Text="{Binding Id}" FontAttributes="Bold" />
-                        <Label Grid.Column="1" Text="{Binding Name}" />
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <!-- App 1 Panel -->
+        <Frame 
+            BorderColor="Blue"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="App1"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App1NameLabel"
+                    Text="--"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App1TimeLabel"
+                    Text="-- minuter"
+                    FontSize="16"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- App 2 Panel -->
+        <Frame 
+            BorderColor="Green"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="App2"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App2NameLabel"
+                    Text="--"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App2TimeLabel"
+                    Text="-- minuter"
+                    FontSize="16"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- App 3 Panel -->
+        <Frame 
+            BorderColor="Coral"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="App3"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App3NameLabel"
+                    Text="--"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App3TimeLabel"
+                    Text="-- minuter"
+                    FontSize="16"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- App 4 Panel -->
+        <Frame 
+            BorderColor="DarkGoldenrod"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="App4"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App4NameLabel"
+                    Text="--"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App4TimeLabel"
+                    Text="-- minuter"
+                    FontSize="16"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- App 5 Panel -->
+        <Frame 
+            BorderColor="Pink"
+            CornerRadius="10"
+            Padding="20"
+            HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                <Label 
+                    Text="App5"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App5NameLabel"
+                    Text="--"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" />
+                <Label 
+                    x:Name="App5TimeLabel"
+                    Text="-- minuter"
+                    FontSize="16"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <Button 
+            Text="Visa mest använda appar"
+            Clicked="OnShowTopAppsClicked"
+            HorizontalOptions="Center"
+            HeightRequest="50"
+            WidthRequest="250" />
+
     </VerticalStackLayout>
 </ContentPage>
