@@ -1,9 +1,10 @@
-﻿using PlannerApp.popups;
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using PlannerApp.SRC.Callender;
 using PlannerApp.SRC.DB;
 using Microsoft.Maui.ApplicationModel;
 using PlannerApp.SRC.Backend;
+using PlannerApp.SRC.Models;
+using PlannerApp.popups;
 
 namespace PlannerApp
 {
@@ -19,12 +20,11 @@ namespace PlannerApp
 
         private SRC.Callender.Callender _calender;
         private readonly AppService _appService;
+        private readonly dbContext _dbContext;
 
         #endregion
 
         #region Constructor
-
-        private readonly dbContext _dbContext;
 
 
         // Initierar MainPage och konfigurerar kalendern
@@ -47,9 +47,13 @@ namespace PlannerApp
             _calender.HourSelected += async (sender, dateTime) =>
             {
                 var installedApps = _appService.GetInstalledApps();
-                var popup = new BookingPopUp(dateTime, installedApps);
+                var popup = new BookingPopUp(dateTime, installedApps, _dbContext);
                 var result = await this.ShowPopupAsync(popup);
                 
+                if (result is SchedualModel)
+                {
+                    await RefreshCalendar();
+                }
             };
         }
         
@@ -63,9 +67,30 @@ namespace PlannerApp
 
             // Säkerställ att väderloggar är laddade innan kalendern visas
             // SetDatabase kallas i konstruktorn men vi väntar här in laddningen så UI visar data direkt.
+            await RefreshCalendar();
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+       
+        private async void OnRefreshClicked(object sender, EventArgs e)
+        {
+            await RefreshCalendar();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+       
+        private async Task RefreshCalendar()
+        {
             if (_calender != null)
             {
                 await _calender.RefreshWeatherLogsAsync();
+                await _calender.RefreshSchedualsAsync();
 
                 // Tvinga layoutuppdatering så cellerna binder om och visar temperaturer
                 try

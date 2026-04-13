@@ -32,6 +32,7 @@ namespace PlannerApp.SRC.Callender
 
         private dbContext? _dbContext;
         private List<WeatherLoggingModel> _weatherLogs = new List<WeatherLoggingModel>();
+        private List<SchedualModel> _scheduals = new List<SchedualModel>();
 
         #endregion
 
@@ -50,6 +51,7 @@ namespace PlannerApp.SRC.Callender
                 EnablePastDates = false,                      // Förhindrar val av tidigare datum
                 ShowTrailingAndLeadingDates = false,          // Visar endast aktuell månads dagar
                 SelectionShape = CalendarSelectionShape.Rectangle, // Rektangulär markering av vald dag
+                SelectionBackground = new SolidColorBrush(Color.FromRgba(33, 150, 243, 0.5)),
                 MonthView = new CalendarMonthView
                 {
                     NumberOfVisibleWeeks = 1,                 // Visar endast en vecka i taget
@@ -77,6 +79,7 @@ namespace PlannerApp.SRC.Callender
         {
             _dbContext = database;
             _ = RefreshWeatherLogsAsync();
+            _ = RefreshSchedualsAsync();
         }
 
        
@@ -100,6 +103,62 @@ namespace PlannerApp.SRC.Callender
             }
         }
 
+        public async Task RefreshSchedualsAsync()
+        {
+            if (_dbContext == null)
+            {
+                _scheduals = new List<SchedualModel>();
+                return;
+            }
+
+            try
+            {
+                _scheduals = await _dbContext.GetSchedualsAsync() ?? new List<SchedualModel>();
+                RefreshCalendarView();
+            }
+            catch
+            {
+                _scheduals = new List<SchedualModel>();
+            }
+        }
+
+        private void RefreshCalendarView()
+        {
+            if (Calendar == null) return;
+
+            try
+            {
+                // Spara nuvarande state
+                var currentDate = Calendar.SelectedDate ?? DateTime.Today;
+                var currentView = Calendar.View;
+
+                // Metod 1: Byt vy för att tvinga fullständig omritning
+                Calendar.View = CalendarView.Year;
+                Calendar.View = currentView;
+
+                // Metod 2: Byt DisplayDate för att tvinga cellerna att uppdatera
+                Calendar.DisplayDate = currentDate.AddDays(1);
+                Calendar.DisplayDate = currentDate;
+
+                // Metod 3: Sätt SelectedDate igen för att trigga uppdatering
+                Calendar.SelectedDate = currentDate;
+
+                // Metod 4: Tvinga layout-uppdatering
+                Calendar.InvalidateMeasure();
+                
+                // Om kalendern har en parent, tvinga även den att uppdatera
+                if (Calendar.Parent is VisualElement parent)
+                {
+                    parent.InvalidateMeasure();
+                }
+            }
+            catch
+            {
+                // Ignore any errors during refresh
+            }
+        }
+
+
         #endregion
 
         #region Private Methods
@@ -115,7 +174,7 @@ namespace PlannerApp.SRC.Callender
             // Huvudlayout för dag-cellen
             var mainLayout = new VerticalStackLayout
             {
-                Spacing = 5,              // Mellanrum mellan datumnummer och timmar
+                Spacing = 5,              // Mellanrum mellan datumnumret och timmar
                 Padding = new Thickness(2) // Padding runt innehållet
             };
 
@@ -146,7 +205,7 @@ namespace PlannerApp.SRC.Callender
                 var hourContainer = new VerticalStackLayout
                 {
                     Spacing = 0,
-                    Padding = new Thickness(0)
+                    Padding = new Thickness(5, 2)
                 };
 
                 // Label för varje timme
@@ -226,6 +285,11 @@ namespace PlannerApp.SRC.Callender
                     await RefreshWeatherLogsAsync();
                 }
 
+                if ((_scheduals == null || !_scheduals.Any()) && _dbContext != null)
+                {
+                    await RefreshSchedualsAsync();
+                }
+
                 // För varje tim-kontainer uppdatera tempLabel enligt loggarna
                 for (int i = 0; i < hoursLayout.Children.Count; i++)
                 {
@@ -234,17 +298,35 @@ namespace PlannerApp.SRC.Callender
                         var tempLabel = hourContainer.Children[1] as Label;
                         if (tempLabel == null) continue;
 
-                        var log = _weatherLogs?.FirstOrDefault(w =>
-                            w.DateTime.Date == cellDetails.Date.Date &&
-                            w.DateTime.Hour == i);
+                        var currentHour = new DateTime(cellDetails.Date.Year, cellDetails.Date.Month, cellDetails.Date.Day, i, 0, 0);
 
-                        if (log != null)
+                        var booking = _scheduals?.FirstOrDefault(s =>
+                            currentHour >= s.StartTime && currentHour < s.EndTime);
+
+                        if (booking != null)
                         {
-                            tempLabel.Text = $"{System.Math.Round(log.Temperature, 1)}°C";
+                            hourContainer.BackgroundColor = Color.FromArgb(booking.BackgroundColor ?? "#2196F3");
+                            tempLabel.Text = booking.Title ?? "";
+                            tempLabel.TextColor = Colors.White;
+                            tempLabel.FontAttributes = FontAttributes.Bold;
                         }
                         else
                         {
-                            tempLabel.Text = string.Empty;
+                            hourContainer.BackgroundColor = Colors.Transparent;
+                            var log = _weatherLogs?.FirstOrDefault(w =>
+                                w.DateTime.Date == cellDetails.Date.Date &&
+                                w.DateTime.Hour == i);
+
+                            if (log != null)
+                            {
+                                tempLabel.Text = $"{System.Math.Round(log.Temperature, 1)}°C";
+                                tempLabel.TextColor = Colors.Gray;
+                                tempLabel.FontAttributes = FontAttributes.None;
+                            }
+                            else
+                            {
+                                tempLabel.Text = string.Empty;
+                            }
                         }
 
                         // Se till att childernas BindingContext är samma som cellens så att tapp fungerar

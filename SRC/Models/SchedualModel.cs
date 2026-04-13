@@ -12,7 +12,7 @@ namespace PlannerApp.SRC.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public string title { get; set; }
+        public string Title { get; set; }
         public string AppName { get; set; }
         public int AppId { get; set; }
         public DateTime StartTime { get; set; }
