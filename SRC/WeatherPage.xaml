@@ -72,12 +72,12 @@
             </VerticalStackLayout>
         </Frame>
 
-        <Button 
+        <!--<Button 
             Text="Uppdatera väder"
             Clicked="OnUpdateWeatherClicked"
             HorizontalOptions="Center"
             HeightRequest="50"
-            WidthRequest="200" />
+            WidthRequest="200" />-->
 
     </VerticalStackLayout>
 </ContentPage>
