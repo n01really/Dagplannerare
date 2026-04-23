@@ -125,12 +125,12 @@ public partial class BookingPopUp : Popup
             EndTime = endTime,
             Description = DescriptionEditor.Text ?? "",
             BackgroundColor = _selectedColor,
-            Executed = false  // FIXED: Sätt explicit till false så programmet kan köras
+            IsRunning = false  // FIXED: Sätt explicit till false så programmet kan köras
         };
 
         await _dbContext.SaveSchedualAsync(schedual);
         
-        Debug.WriteLine($"Schemat sparat - Executed: {schedual.Executed}, AppId: {schedual.AppId}");
+        Debug.WriteLine($"Schemat sparat - IsRunning: {schedual.IsRunning}, AppId: {schedual.AppId}");
         
         Close(schedual);
     }

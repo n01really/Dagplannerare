@@ -70,8 +70,9 @@ namespace PlannerApp.SRC.Backend
 
                 var toExecute = schedules
                     .Where(s => s.StartTime <= now 
+                             && now < s.EndTime  // Kontrollera att vi är INOM tidsfönstret
                              && s.AppId != 0 
-                             && !s.Executed)  // Kör bara om INTE redan körda
+                             && !s.IsRunning)  // Kör bara om INTE redan körda
                     .ToList();
 
                 foreach (var schedule in toExecute)
@@ -80,6 +81,13 @@ namespace PlannerApp.SRC.Backend
                     if (IsSelfReference(schedule.AppName))
                     {
                         Debug.WriteLine($"Skippade {schedule.AppName} - kan inte starta sig själv");
+                        continue;
+                    }
+
+                    // Kontrollera om programmet redan körs
+                    if (IsProgramRunning(schedule.AppName))
+                    {
+                        Debug.WriteLine($"Programmet {schedule.AppName} körs redan - skippar start");
                         continue;
                     }
 
@@ -108,6 +116,25 @@ namespace PlannerApp.SRC.Backend
             catch (Exception ex)
             {
                 Debug.WriteLine($"Fel i CheckAndLaunchAsync: {ex.Message}");
+            }
+        }
+
+        private bool IsProgramRunning(string appName)
+        {
+            try
+            {
+                string? appNameToCheck = GetAppNameFromPath(appName);
+                if (string.IsNullOrEmpty(appNameToCheck))
+                    return false;
+
+                var runningProcesses = Process.GetProcesses();
+                return runningProcesses.Any(p => 
+                    p.ProcessName.Equals(appNameToCheck, StringComparison.OrdinalIgnoreCase));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Fel vid kontroll av körande program: {ex.Message}");
+                return false;
             }
         }
 
@@ -217,7 +244,7 @@ namespace PlannerApp.SRC.Backend
 
         private async Task MarkAsExecutedAsync(SchedualModel schedule)
         {
-            schedule.Executed = true;
+            schedule.IsRunning = true;
             await _dbContext.UpdateScheduleAsync(schedule);
             
             // Logga körningen
