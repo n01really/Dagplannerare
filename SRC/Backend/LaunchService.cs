@@ -64,30 +64,36 @@ namespace PlannerApp.SRC.Backend
         {
             try
             {
-                // Hämta schemalagda program där tiden passerat OCH som EJ körts
+                // Hämta schemalagda program
                 var schedules = await _dbContext.GetSchedualsAsync();
                 var now = DateTime.Now;
+
+                // Uppdatera IsRunning status för alla scheman
+                foreach (var schedule in schedules)
+                {
+                    bool isRunning = IsProgramRunning(schedule.AppName);
+                    
+                    // Uppdatera om status ändrats
+                    if (schedule.IsRunning != isRunning)
+                    {
+                        schedule.IsRunning = isRunning;
+                        await _dbContext.UpdateScheduleAsync(schedule);
+                    }
+                }
 
                 var toExecute = schedules
                     .Where(s => s.StartTime <= now 
                              && now < s.EndTime  // Kontrollera att vi är INOM tidsfönstret
                              && s.AppId != 0 
-                             && !s.IsRunning)  // Kör bara om INTE redan körda
+                             && !s.IsRunning)  // Kör bara om programmet INTE körs
                     .ToList();
 
                 foreach (var schedule in toExecute)
                 {
-                    // FÖRHINDRA att appen startar sig själv (Rättad stavning)
+                    // FÖRHINDRA att appen startar sig själv
                     if (IsSelfReference(schedule.AppName))
                     {
                         Debug.WriteLine($"Skippade {schedule.AppName} - kan inte starta sig själv");
-                        continue;
-                    }
-
-                    // Kontrollera om programmet redan körs
-                    if (IsProgramRunning(schedule.AppName))
-                    {
-                        Debug.WriteLine($"Programmet {schedule.AppName} körs redan - skippar start");
                         continue;
                     }
 
@@ -104,8 +110,14 @@ namespace PlannerApp.SRC.Backend
                         };
                         Process.Start(processInfo);
 
-                        // Markera som körd
-                        await MarkAsExecutedAsync(schedule);
+                        // Markera som körande
+                        schedule.IsRunning = true;
+                        await _dbContext.UpdateScheduleAsync(schedule);
+
+                        // Logga körningen
+                        await LogProgramStartAsync(schedule);
+                        
+                        Debug.WriteLine($"Startade {schedule.AppName} för schema ID: {schedule.Id}");
                     }
                     catch (Exception ex)
                     {
@@ -242,11 +254,8 @@ namespace PlannerApp.SRC.Backend
             }
         }
 
-        private async Task MarkAsExecutedAsync(SchedualModel schedule)
+        private async Task LogProgramStartAsync(SchedualModel schedule)
         {
-            schedule.IsRunning = true;
-            await _dbContext.UpdateScheduleAsync(schedule);
-            
             // Logga körningen
             var log = new ProcessLoggingModel
             {
