@@ -10,6 +10,7 @@ public partial class WeatherPage : ContentPage
 	private readonly SmhiAPI _smhiAPI = new SmhiAPI();
 	private readonly SeasonCalculator _seasonCalculator = new SeasonCalculator();
     private readonly dbContext _dbContext;
+    private IDispatcherTimer _weatherTimer;
 
     public WeatherPage(dbContext database)
 	{
@@ -17,7 +18,29 @@ public partial class WeatherPage : ContentPage
         _dbContext = database;
 	}
 
-    private async void OnUpdateWeatherClicked(object sender, EventArgs e)
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        
+        // Uppdatera direkt när sidan visas
+        await UpdateWeatherAsync();
+        
+        // Starta timer för uppdatering varje timme (3600 sekunder)
+        _weatherTimer = Dispatcher.CreateTimer();
+        _weatherTimer.Interval = TimeSpan.FromHours(1);
+        _weatherTimer.Tick += async (s, e) => await UpdateWeatherAsync();
+        _weatherTimer.Start();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        
+        // Stoppa timer när sidan lämnas
+        _weatherTimer?.Stop();
+    }
+
+    private async Task UpdateWeatherAsync()
     {
         // Visa laddningsstatus
         TempLabel.Text = "Laddar...";
