@@ -9,20 +9,19 @@ jobs:
     runs-on: windows-latest
 
     steps:
-     
       - name: Checkout code
         uses: actions/checkout@v4
 
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          node-version: 'lts/*'
+          dotnet-version: 'lts/*'
 
-     
-      - name: Install dependencies
-        run: npm install
+      - name: Restore dependencies
+        run: dotnet restore
 
-      
+      - name: Build
+        run: dotnet build --no-restore
+
       - name: Run tests
-        run: npm test  
+        run: dotnet test --no-build --verbosity normal
