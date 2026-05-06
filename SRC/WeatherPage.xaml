@@ -6,7 +6,7 @@
     <VerticalStackLayout Spacing="25" Padding="30" VerticalOptions="Center">
 
         <Label 
-            Text="Tryck på knappen för att hämta väder"
+            
             FontSize="18"
             HorizontalOptions="Center" />
 
