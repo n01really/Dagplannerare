@@ -171,54 +171,58 @@ namespace PlannerApp.SRC.Callender
         // som representerar innehållet i en dag-cell
         private View CreateDayCellWithHours()
         {
-            // Huvudlayout för dag-cellen
-            var mainLayout = new VerticalStackLayout
+            // LÖSNING: Använd Grid istället för VerticalStackLayout för att tvinga fram en begränsad höjd
+            var mainLayout = new Grid
             {
-                Spacing = 5,              // Mellanrum mellan datumnumret och timmar
-                Padding = new Thickness(2) // Padding runt innehållet
+                RowDefinitions = new RowDefinitionCollection
+        {
+            new RowDefinition { Height = GridLength.Auto }, // För datum-etiketten
+            new RowDefinition { Height = GridLength.Star }  // Tar resten av platsen och aktiverar scroll
+        },
+                RowSpacing = 5,
+                Padding = new Thickness(2)
             };
 
             // Label som visar dagens nummer (1-31)
             var dateLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.Center,
-                FontAttributes = FontAttributes.Bold, // Fet text för bättre synlighet
+                FontAttributes = FontAttributes.Bold,
                 FontSize = 14,
-                TextColor = Colors.Black              // Svart färg för tydlig läsbarhet
+                TextColor = Colors.Black
             };
-            // Binder till Date.Day från CalendarCellDetails (kommer från Syncfusion)
             dateLabel.SetBinding(Label.TextProperty, "Date.Day");
+
+            // Placera datumet på rad 0 i gridden
+            Grid.SetRow(dateLabel, 0);
             mainLayout.Add(dateLabel);
 
             // Layout som innehåller alla timmar
             var hoursLayout = new VerticalStackLayout
             {
-                Spacing = 6  // mindre mellanrum för bättre kompakt vy i cell
+                Spacing = 6
             };
 
             // Skapar 24 timmar (00:00 - 23:00)
             for (int hour = 0; hour < 24; hour++)
             {
-                int capturedHour = hour; // Viktigt: sparar för closure
+                int capturedHour = hour;
 
-                // Container för timmen (innehåller timtext och temptext)
                 var hourContainer = new VerticalStackLayout
                 {
                     Spacing = 0,
                     Padding = new Thickness(5, 2)
                 };
 
-                // Label för varje timme
                 var hourLabel = new Label
                 {
-                    Text = $"{capturedHour:D2}:00",           // Formaterar som 00:00, 01:00, etc.
+                    Text = $"{capturedHour:D2}:00",
                     FontSize = 12,
                     HorizontalOptions = LayoutOptions.Center,
-                    TextColor = Colors.Black,          // Svart färg för tydlig läsbarhet
-                    Padding = new Thickness(5)         // Padding för större klickyta
+                    TextColor = Colors.Black,
+                    Padding = new Thickness(5)
                 };
 
-                // Label för eventuellt temperaturvärde
                 var tempLabel = new Label
                 {
                     Text = string.Empty,
@@ -227,39 +231,28 @@ namespace PlannerApp.SRC.Callender
                     TextColor = Colors.Gray,
                 };
 
-                // Lägger till tap-gesture för att göra timmen klickbar
                 var tapGesture = new TapGestureRecognizer();
-
-                // Event handler när användaren klickar på en timme
                 tapGesture.Tapped += (s, e) =>
                 {
-                    // Kontrollerar att vi har rätt context
-                    // BindingContext på cellen blir en CalendarCellDetails och ärvs av barn
                     if (s is Label || s is VisualElement)
                     {
-                        // Vi tar BindingContext från hourLabel då den är barn i cellens trädkedja
                         var bindingContext = hourLabel.BindingContext;
                         if (bindingContext is CalendarCellDetails cellDetails)
                         {
-                            // Skapar en DateTime med valt datum och timme
                             DateTime selectedHour = new DateTime(
                                 cellDetails.Date.Year,
                                 cellDetails.Date.Month,
                                 cellDetails.Date.Day,
                                 capturedHour, 0, 0);
 
-                            // Triggar HourSelected-eventet som MainPage kan lyssna på
                             HourSelected?.Invoke(this, selectedHour);
                         }
                     }
                 };
 
                 hourLabel.GestureRecognizers.Add(tapGesture);
-
                 hourContainer.Add(hourLabel);
                 hourContainer.Add(tempLabel);
-
-                // Spara hourContainer så vi senare kan uppdatera tempLabel när BindingContext ändras
                 hoursLayout.Add(hourContainer);
             }
 
@@ -267,19 +260,20 @@ namespace PlannerApp.SRC.Callender
             var scrollView = new ScrollView
             {
                 Content = hoursLayout,
-                Orientation = ScrollOrientation.Vertical,      // Vertikal scrollning
-                VerticalScrollBarVisibility = ScrollBarVisibility.Always // Visar alltid scrollbar
+                Orientation = ScrollOrientation.Vertical,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Always
             };
 
+            // Placera ScrollView på rad 1 så den tvingas att hålla sig inom cellen
+            Grid.SetRow(scrollView, 1);
             mainLayout.Add(scrollView);
 
-            // När cellens BindingContext sätts (CalendarCellDetails) uppdatera temperaturvisningen
+            // Hanterar uppdatering av färg och bokningar/väder (Behålls exakt som du skrivit)
             mainLayout.BindingContextChanged += async (s, e) =>
             {
                 if (mainLayout.BindingContext is not CalendarCellDetails cellDetails)
                     return;
 
-                // Se till att vi har weather-logs i minnet
                 if ((_weatherLogs == null || !_weatherLogs.Any()) && _dbContext != null)
                 {
                     await RefreshWeatherLogsAsync();
@@ -290,7 +284,6 @@ namespace PlannerApp.SRC.Callender
                     await RefreshSchedualsAsync();
                 }
 
-                // För varje tim-kontainer uppdatera tempLabel enligt loggarna
                 for (int i = 0; i < hoursLayout.Children.Count; i++)
                 {
                     if (hoursLayout.Children[i] is VerticalStackLayout hourContainer && hourContainer.Children.Count >= 2)
@@ -329,7 +322,6 @@ namespace PlannerApp.SRC.Callender
                             }
                         }
 
-                        // Se till att childernas BindingContext är samma som cellens så att tapp fungerar
                         hourContainer.BindingContext = cellDetails;
                         if (hourContainer.Children[0] is VisualElement ve) ve.BindingContext = cellDetails;
                         if (hourContainer.Children[1] is VisualElement ve2) ve2.BindingContext = cellDetails;
@@ -340,9 +332,9 @@ namespace PlannerApp.SRC.Callender
             return mainLayout;
         }
 
-        
+
         // Hanterar när användaren väljer ett nytt datum i kalendern
-        
+
         private void OnSelectionChanged(object? sender, CalendarSelectionChangedEventArgs e)
         {
             if (e.NewValue != null)
