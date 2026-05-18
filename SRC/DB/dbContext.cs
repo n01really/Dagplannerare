@@ -162,10 +162,11 @@ namespace PlannerApp.SRC.DB
             }
         }
 
-        public async Task<int> DeleteProcessLogAsync(ProcessLoggingModel processLog)
+        public async Task ClearProcessLogsAsync()
         {
             await InitializeDatabaseAsync();
-            return await _connection.DeleteAsync(processLog);
+            
+            await _connection.DeleteAllAsync<ProcessLoggingModel>();
         }
 
         public async Task AddProcessLogAsync(ProcessLoggingModel log)

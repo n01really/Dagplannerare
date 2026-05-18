@@ -147,7 +147,16 @@
             HorizontalOptions="Center"
             HeightRequest="50"
             WidthRequest="250" />
+        <Button 
+            Text="Rensa all historik"
+            Clicked="OnClearHistoryClicked"
+            HorizontalOptions="Center"
+            HeightRequest="40"
+            WidthRequest="200"
+            BackgroundColor="#F44336"
+            TextColor="White"
+            Margin="0,10,0,0"/>
 
-    </VerticalStackLayout>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
