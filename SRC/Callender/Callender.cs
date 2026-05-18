@@ -124,38 +124,24 @@ namespace PlannerApp.SRC.Callender
 
         private void RefreshCalendarView()
         {
-            if (Calendar == null) return;
+            if (Calendar == null || Calendar.MonthView == null) return;
 
-            try
+            // Eftersom databasen laddas asynkront måste vi se till att UI-uppdateringen 
+            // sker på appens huvudtråd (UI-tråden)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                // Spara nuvarande state
-                var currentDate = Calendar.SelectedDate ?? DateTime.Today;
-                var currentView = Calendar.View;
-
-                // Metod 1: Byt vy för att tvinga fullständig omritning
-                Calendar.View = CalendarView.Year;
-                Calendar.View = currentView;
-
-                // Metod 2: Byt DisplayDate för att tvinga cellerna att uppdatera
-                Calendar.DisplayDate = currentDate.AddDays(1);
-                Calendar.DisplayDate = currentDate;
-
-                // Metod 3: Sätt SelectedDate igen för att trigga uppdatering
-                Calendar.SelectedDate = currentDate;
-
-                // Metod 4: Tvinga layout-uppdatering
-                Calendar.InvalidateMeasure();
-                
-                // Om kalendern har en parent, tvinga även den att uppdatera
-                if (Calendar.Parent is VisualElement parent)
+                try
                 {
-                    parent.InvalidateMeasure();
+                    // Genom att sätta CellTemplate till null och sedan ge den en ny DataTemplate
+                    // tvingar vi Syncfusion att rensa sin cache och bygga om alla celler från grunden.
+                    Calendar.MonthView.CellTemplate = null;
+                    Calendar.MonthView.CellTemplate = new DataTemplate(() => CreateDayCellWithHours());
                 }
-            }
-            catch
-            {
-                // Ignore any errors during refresh
-            }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Fel vid uppdatering av kalendervy: {ex.Message}");
+                }
+            });
         }
 
 
@@ -250,7 +236,10 @@ namespace PlannerApp.SRC.Callender
                     }
                 };
 
-                hourLabel.GestureRecognizers.Add(tapGesture);
+                hourLabel.InputTransparent = true;
+                tempLabel.InputTransparent = true;
+
+                hourContainer.GestureRecognizers.Add(tapGesture);
                 hourContainer.Add(hourLabel);
                 hourContainer.Add(tempLabel);
                 hoursLayout.Add(hourContainer);

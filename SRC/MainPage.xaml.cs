@@ -21,7 +21,7 @@ namespace PlannerApp
         private SRC.Callender.Callender _calender;
         private readonly AppService _appService;
         private readonly dbContext _dbContext;
-        private readonly LaunchService _launchService; 
+        private readonly LaunchService _launchService;
 
         #endregion
 
@@ -51,20 +51,33 @@ namespace PlannerApp
             // Prenumererar på HourSelected-eventet för att hantera när användaren väljer en timme
             _calender.HourSelected += async (sender, dateTime) =>
             {
+                // 1. Hämta dina installerade appar (precis som du gjorde innan)
                 var installedApps = _appService.GetInstalledApps();
-                var popup = new BookingPopUp(dateTime, installedApps, _dbContext);
+
+                // 2. Hämta alla sparade scheman från databasen
+                // (Dubbelkolla så att din metod i dbContext heter exakt GetSchedualsAsync eller liknande)
+                var allSchedules = await _dbContext.GetSchedualsAsync();
+
+                // 3. Kolla om det redan finns en bokning som krockar med den timme du klickade på
+                var existingBooking = allSchedules?.FirstOrDefault(b =>
+                    dateTime >= b.StartTime && dateTime < b.EndTime);
+
+                // 4. Skicka med 'existingBooking' till popupen. 
+                // Om den är null fattar popupen att det är en NY bokning, annars blir det ÄNDRA-läge.
+                var popup = new BookingPopUp(dateTime, installedApps, _dbContext, existingBooking);
+
                 var result = await this.ShowPopupAsync(popup);
-                
+
                 if (result is SchedualModel)
                 {
                     await RefreshCalendar();
                 }
             };
         }
-        
+
         #endregion
 
-        #region Lifecycle
+            #region Lifecycle
 
         protected override async void OnAppearing()
         {

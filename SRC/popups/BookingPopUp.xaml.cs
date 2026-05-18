@@ -12,6 +12,8 @@ public partial class BookingPopUp : Popup
     private readonly DateTime _selectedDate;
     private readonly dbContext _dbContext;
     private string _selectedColor = "#2196F3";
+
+    private readonly SchedualModel? _existingBooking;
     
     private readonly List<string> _availableColors = new List<string>
     {
@@ -19,12 +21,13 @@ public partial class BookingPopUp : Popup
         "#F44336", "#00BCD4", "#FF9800", "#795548", "#607D8B"
     };
 
-    public BookingPopUp(DateTime selectedTime, List<AppsModels> apps, dbContext dbContext)
+    public BookingPopUp(DateTime selectedTime, List<AppsModels> apps, dbContext dbContext, SchedualModel? existingBooking = null)
     {
         InitializeComponent();
         
         _selectedDate = selectedTime;
         _dbContext = dbContext;
+        _existingBooking = existingBooking;
         
         SelectedTimeLabel.Text = $"{selectedTime:yyyy-MM-dd HH:mm}";
         StartTimePicker.Time = selectedTime.TimeOfDay;
@@ -33,7 +36,32 @@ public partial class BookingPopUp : Popup
         AppPicker.ItemsSource = apps;
         
         CreateColorPalette();
+
+        if (_existingBooking != null)
+        {
+            
+            SelectedTimeLabel.Text = $"{_existingBooking.DateTime:yyyy-MM-dd} (Redigerar)";
+            TitleEntry.Text = _existingBooking.Title;
+            DescriptionEditor.Text = _existingBooking.Description;
+            StartTimePicker.Time = _existingBooking.StartTime.TimeOfDay;
+            EndTimePicker.Time = _existingBooking.EndTime.TimeOfDay;
+            _selectedColor = _existingBooking.BackgroundColor ?? "#2196F3";
+
+            // Välj rätt app i pickern om det finns en sparad
+            if (apps != null && _existingBooking.AppId != 0)
+            {
+                AppPicker.SelectedItem = apps.FirstOrDefault(a => a.Id == _existingBooking.AppId);
+            }
+        }
+        else
+        {
+            // Standardläge (Skapa ny)
+            SelectedTimeLabel.Text = $"{selectedTime:yyyy-MM-dd HH:mm}";
+            StartTimePicker.Time = selectedTime.TimeOfDay;
+            EndTimePicker.Time = selectedTime.AddHours(1).TimeOfDay;
+        }
     }
+    
 
     private void CreateColorPalette()
     {
@@ -108,30 +136,46 @@ public partial class BookingPopUp : Popup
             {
                 title = selectedApp.Name;
             }
-            // FIXED: Spara hela sökvägen till programmet, inte bara namnet
-            appName = selectedApp.Path;  // Path innehåller fullständig sökväg
+            
+            appName = selectedApp.Path;  
             appId = selectedApp.Id;
             
             Debug.WriteLine($"Schemalagt program: {title} ({appName}) för {startTime}");
         }
 
-        var schedual = new SchedualModel
+        SchedualModel schedual;
+        if (_existingBooking != null)
         {
-            Title = title,
-            AppName = appName,
-            AppId = appId,
-            DateTime = _selectedDate.Date,
-            StartTime = startTime,
-            EndTime = endTime,
-            Description = DescriptionEditor.Text ?? "",
-            BackgroundColor = _selectedColor,
-            IsRunning = false  // FIXED: Sätt explicit till false så programmet kan köras
-        };
+            schedual = _existingBooking; // Använd samma ID och objekt
+            schedual.Title = title;
+            schedual.AppName = appName;
+            schedual.AppId = appId;
+            schedual.StartTime = startTime;
+            schedual.EndTime = endTime;
+            schedual.Description = DescriptionEditor.Text ?? "";
+            schedual.BackgroundColor = _selectedColor;
 
-        await _dbContext.SaveSchedualAsync(schedual);
-        
-        Debug.WriteLine($"Schemat sparat - IsRunning: {schedual.IsRunning}, AppId: {schedual.AppId}");
-        
+            // Använd din dbContext-metod för att uppdatera
+            await _dbContext.UpdateScheduleAsync(schedual);
+        }
+        else
+        {
+            schedual = new SchedualModel
+            {
+                Title = title,
+                AppName = appName,
+                AppId = appId,
+                DateTime = _selectedDate.Date,
+                StartTime = startTime,
+                EndTime = endTime,
+                Description = DescriptionEditor.Text ?? "",
+                BackgroundColor = _selectedColor,
+                IsRunning = false
+            };
+
+            await _dbContext.SaveSchedualAsync(schedual);
+        }
+
         Close(schedual);
     }
 

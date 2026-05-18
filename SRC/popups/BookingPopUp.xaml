@@ -16,7 +16,8 @@
         
         <ScrollView>
             <VerticalStackLayout Spacing="20">
-                <Label Text="Skapa bokning"
+                <Label x:Name="PopupTitle"
+                       Text="Skapa bokning"
                        FontSize="24"
                        FontAttributes="Bold"
                        HorizontalOptions="Center"
